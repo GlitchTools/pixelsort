@@ -1,4 +1,7 @@
-from PIL import Image, ImageFilter
+try:
+	import Image, ImageFilter
+except ImportError:
+	from PIL import Image, ImageFilter
 import random
 import string
 import argparse
@@ -19,9 +22,9 @@ threshold = int(args.threshold)
 clength = int(args.clength)
 angle = float(args.angle)
 
-print "Randomness =", randomness, "%"
-print "Threshold =", threshold
-print "Characteristic length = ", clength
+print("Randomness =", randomness, "%")
+print("Threshold =", threshold)
+print("Characteristic length = ", clength)
 
 black_pixel = (0, 0, 0, 255)
 white_pixel = (255, 255, 255, 255)
@@ -155,6 +158,7 @@ def int_file(pixels):
 
 def int_file_edges(pixels):
 	img = Image.open(args.int_file)
+	img = img.resize((len(pixels[0]), len(pixels)), Image.ANTIALIAS)
 	edges = img.filter(ImageFilter.FIND_EDGES)
 	edges = edges.convert('RGBA')
 	edge_data = edges.load()
@@ -209,7 +213,7 @@ try:
 		"file-edges": int_file_edges,
 		"none": int_none}[args.int_function]
 except KeyError:
-	print "[WARNING] Invalid interval function specified, defaulting to 'random'. Try one of [random, edges, waves, file, none]"
+	print("[WARNING] Invalid interval function specified, defaulting to 'random'. Try one of [random, edges, waves, file, none]")
 	int_function = int_random
 
 # Sorts the image
@@ -262,6 +266,6 @@ def pixel_sort():
 	new = new.rotate(-angle)
 	print("Saving image...")
 	new.save(outputImage)
-	print "Done!", outputImage
+	print("Done!", outputImage)
 
 pixel_sort()
